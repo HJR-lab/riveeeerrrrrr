@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rps-simulator",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["rps-simulator/serve.py"],
+      "port": 3456
+    }
+  ]
+}
