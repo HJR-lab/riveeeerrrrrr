@@ -506,8 +506,8 @@ function updateScore(outcome) {
   $('lSeg').style.width = (score.l/t*100)+'%';
   $('dSeg').style.width = (score.d/t*100)+'%';
   $('wPct').textContent = (score.w/t*100).toFixed(1)+'% W';
-  $('lPct').textContent = (score.d/t*100).toFixed(1)+'% D';
-  $('dPct').textContent = (score.l/t*100).toFixed(1)+'% L';
+  $('dPct').textContent = (score.d/t*100).toFixed(1)+'% D';
+  $('lPct').textContent = (score.l/t*100).toFixed(1)+'% L';
   updateMatchStatus();
 }
 

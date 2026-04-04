@@ -195,23 +195,18 @@ function simulateStatsUpdate(w, l, d) {
   const t = w + l + d || 1;
   return {
     wPct: (w/t*100).toFixed(1)+'% W',
-    lPct: (d/t*100).toFixed(1)+'% D',  // game assigns draws to lPct
-    dPct: (l/t*100).toFixed(1)+'% L',  // game assigns losses to dPct
+    dPct: (d/t*100).toFixed(1)+'% D',
+    lPct: (l/t*100).toFixed(1)+'% L',
   };
 }
 
 const stats = simulateStatsUpdate(5, 3, 2);
-// lPct should show losses, but game shows draws there
 const lPctShowsLosses = stats.lPct.includes('30.0% L');
 const dPctShowsDraws = stats.dPct.includes('20.0% D');
-console.log(`  lPct value: "${stats.lPct}" (should show "30.0% L" for losses)`);
-console.log(`  dPct value: "${stats.dPct}" (should show "20.0% D" for draws)`);
-if (!lPctShowsLosses) {
-  errors.push('BUG: Stats bar labels swapped — lPct shows draw percentage, dPct shows loss percentage. The assignments for $("lPct") and $("dPct") are swapped.');
-  failed++;
-} else {
-  passed++;
-}
+console.log(`  lPct value: "${stats.lPct}" (should show "30.0% L")`);
+console.log(`  dPct value: "${stats.dPct}" (should show "20.0% D")`);
+assert(lPctShowsLosses, 'lPct should show loss percentage');
+assert(dPctShowsDraws, 'dPct should show draw percentage');
 
 // ═══════════════════════════════════════
 // RESULTS
