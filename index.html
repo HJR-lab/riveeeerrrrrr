@@ -133,7 +133,7 @@
 </head>
 <body>
 <h1>Rock Paper Scissors+</h1>
-<p class="subtitle">6 moves. Play, Simulate, or Challenge a Friend.</p>
+<p class="subtitle">4 moves. Play, Simulate, or Challenge a Friend.</p>
 
 <div class="container">
   <div class="mode-toggle">
@@ -171,8 +171,6 @@
   <!-- CPU mode buttons -->
   <div class="choices" id="cpuControls">
     <button class="choice-btn" data-choice="rock" title="Rock">&#x1FAA8;<span class="btn-label">Rock</span></button>
-    <button class="choice-btn" data-choice="paper" title="Paper">&#x1F4C4;<span class="btn-label">Paper</span></button>
-    <button class="choice-btn" data-choice="scissors" title="Scissors">&#x2702;&#xFE0F;<span class="btn-label">Scissors</span></button>
     <button class="choice-btn" data-choice="fireball" title="Fireball">&#x1F525;<span class="btn-label">Fireball</span></button>
     <button class="choice-btn" data-choice="water" title="Water">&#x1F4A7;<span class="btn-label">Water</span></button>
     <button class="choice-btn" data-choice="lightning" title="Lightning">&#x26A1;<span class="btn-label">Lightning</span></button>
@@ -185,8 +183,6 @@
       <span class="panel-status" id="p1Status">Pick your move</span>
       <div class="choices">
         <button class="choice-btn" data-player="1" data-choice="rock">&#x1FAA8;<span class="btn-label">Rock</span></button>
-        <button class="choice-btn" data-player="1" data-choice="paper">&#x1F4C4;<span class="btn-label">Paper</span></button>
-        <button class="choice-btn" data-player="1" data-choice="scissors">&#x2702;&#xFE0F;<span class="btn-label">Scissors</span></button>
         <button class="choice-btn" data-player="1" data-choice="fireball">&#x1F525;<span class="btn-label">Fire</span></button>
         <button class="choice-btn" data-player="1" data-choice="water">&#x1F4A7;<span class="btn-label">Water</span></button>
         <button class="choice-btn" data-player="1" data-choice="lightning">&#x26A1;<span class="btn-label">Zap</span></button>
@@ -197,8 +193,6 @@
       <span class="panel-status" id="p2Status">Pick your move</span>
       <div class="choices">
         <button class="choice-btn" data-player="2" data-choice="rock">&#x1FAA8;<span class="btn-label">Rock</span></button>
-        <button class="choice-btn" data-player="2" data-choice="paper">&#x1F4C4;<span class="btn-label">Paper</span></button>
-        <button class="choice-btn" data-player="2" data-choice="scissors">&#x2702;&#xFE0F;<span class="btn-label">Scissors</span></button>
         <button class="choice-btn" data-player="2" data-choice="fireball">&#x1F525;<span class="btn-label">Fire</span></button>
         <button class="choice-btn" data-player="2" data-choice="water">&#x1F4A7;<span class="btn-label">Water</span></button>
         <button class="choice-btn" data-player="2" data-choice="lightning">&#x26A1;<span class="btn-label">Zap</span></button>
@@ -234,8 +228,6 @@
   <!-- Online pick buttons -->
   <div class="choices hidden" id="onlineControls">
     <button class="choice-btn" data-choice="rock" title="Rock">&#x1FAA8;<span class="btn-label">Rock</span></button>
-    <button class="choice-btn" data-choice="paper" title="Paper">&#x1F4C4;<span class="btn-label">Paper</span></button>
-    <button class="choice-btn" data-choice="scissors" title="Scissors">&#x2702;&#xFE0F;<span class="btn-label">Scissors</span></button>
     <button class="choice-btn" data-choice="fireball" title="Fireball">&#x1F525;<span class="btn-label">Fireball</span></button>
     <button class="choice-btn" data-choice="water" title="Water">&#x1F4A7;<span class="btn-label">Water</span></button>
     <button class="choice-btn" data-choice="lightning" title="Lightning">&#x26A1;<span class="btn-label">Lightning</span></button>
@@ -282,28 +274,24 @@
 <script>
 // ─── Game Data ───
 const EMOJI = {
-  rock: '\u{1FAA8}', paper: '\u{1F4C4}', scissors: '\u2702\uFE0F',
+  rock: '\u{1FAA8}',
   fireball: '\u{1F525}', water: '\u{1F4A7}', lightning: '\u26A1'
 };
-const CHOICES = ['rock','paper','scissors','fireball','water','lightning'];
-const NAMES = { rock:'Rock', paper:'Paper', scissors:'Scissors', fireball:'Fireball', water:'Water', lightning:'Lightning' };
+const CHOICES = ['rock','fireball','water','lightning'];
+const NAMES = { rock:'Rock', fireball:'Fireball', water:'Water', lightning:'Lightning' };
 
 const BEATS = {
-  rock:      ['scissors','fireball'],
-  paper:     ['rock','water'],
-  scissors:  ['paper','water','lightning'],
-  fireball:  ['lightning','paper','scissors'],
+  rock:      ['fireball'],
+  fireball:  ['lightning'],
   water:     ['fireball','rock'],
-  lightning: ['water','rock','paper']
+  lightning: ['water','rock']
 };
 
 const WHY = {
-  'rock>scissors':'crushes','rock>fireball':'smothers',
-  'paper>rock':'covers','paper>water':'absorbs',
-  'scissors>paper':'cuts','scissors>water':'slices','scissors>lightning':'grounds',
-  'fireball>lightning':'overpowers','fireball>paper':'burns','fireball>scissors':'melts',
+  'rock>fireball':'smothers',
+  'fireball>lightning':'overpowers',
   'water>fireball':'extinguishes','water>rock':'erodes',
-  'lightning>water':'electrifies','lightning>rock':'shatters','lightning>paper':'zaps'
+  'lightning>water':'electrifies','lightning>rock':'shatters'
 };
 
 // ─── State ───
