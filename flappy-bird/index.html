@@ -36,7 +36,7 @@ canvas.width = W;
 canvas.height = H;
 
 // Game state
-let bird, pipes, score, bestScore, gameState, frameCount, groundX;
+let bird, pipes, score, bestScore, gameState, frameCount, groundX, scoreFlash;
 
 const GRAVITY = 0.45;
 const JUMP = -7.5;
@@ -55,6 +55,7 @@ function init() {
   score = 0;
   frameCount = 0;
   groundX = 0;
+  scoreFlash = 0;
   gameState = 'ready'; // ready, playing, dead
 }
 
@@ -69,6 +70,7 @@ function jump() {
   if (gameState === 'ready') {
     gameState = 'playing';
     bird.vy = JUMP;
+    bird.flapFrame = 8;
   } else if (gameState === 'playing') {
     bird.vy = JUMP;
     bird.flapFrame = 8;
@@ -91,7 +93,17 @@ function update() {
     return;
   }
 
-  if (gameState === 'dead') return;
+  if (gameState === 'dead') {
+    // Bird falls to ground after death
+    bird.vy += GRAVITY;
+    bird.y += bird.vy;
+    bird.rotation = Math.min(bird.rotation + 5, 90);
+    if (bird.y + BIRD_SIZE > H - GROUND_H) {
+      bird.y = H - GROUND_H - BIRD_SIZE;
+      bird.vy = 0;
+    }
+    return;
+  }
 
   // Bird physics
   bird.vy += GRAVITY;
@@ -116,25 +128,28 @@ function update() {
     if (!p.scored && p.x + PIPE_WIDTH < bird.x) {
       p.scored = true;
       score++;
+      scoreFlash = 10;
     }
 
     // Remove off-screen
     if (p.x + PIPE_WIDTH < -10) pipes.splice(i, 1);
   }
 
-  // Collision
-  const bx = bird.x, by = bird.y, br = BIRD_SIZE * 0.45;
+  // Collision — use elliptical hitbox matching the drawn bird
+  const bx = bird.x, by = bird.y;
+  const brx = BIRD_SIZE * 0.75; // horizontal radius (includes beak area)
+  const bry = BIRD_SIZE * 0.6;  // vertical radius
 
   // Ground / ceiling
-  if (by + br > H - GROUND_H || by - br < 0) {
+  if (by + bry > H - GROUND_H || by - bry < 0) {
     die();
     return;
   }
 
   // Pipes
   for (const p of pipes) {
-    if (bx + br > p.x && bx - br < p.x + PIPE_WIDTH) {
-      if (by - br < p.topH || by + br > p.topH + PIPE_GAP) {
+    if (bx + brx > p.x && bx - brx < p.x + PIPE_WIDTH) {
+      if (by - bry < p.topH || by + bry > p.topH + PIPE_GAP) {
         die();
         return;
       }
@@ -178,8 +193,8 @@ function drawPipe(p) {
   const capH = 26;
   const capExtra = 6;
 
-  // Top pipe body
-  const tGrad = ctx.createLinearGradient(p.x, 0, p.x + PIPE_WIDTH, 0);
+  // Pipe gradient covers full width including caps
+  const tGrad = ctx.createLinearGradient(p.x - capExtra, 0, p.x + PIPE_WIDTH + capExtra, 0);
   tGrad.addColorStop(0, '#5cb85c');
   tGrad.addColorStop(0.3, '#73d673');
   tGrad.addColorStop(0.7, '#73d673');
@@ -268,13 +283,19 @@ function drawGround() {
 }
 
 function drawScore() {
-  ctx.fillStyle = '#fff';
+  if (scoreFlash > 0) scoreFlash--;
+  const scale = 1 + scoreFlash * 0.02;
+  ctx.save();
+  ctx.translate(W / 2, 65);
+  ctx.scale(scale, scale);
+  ctx.fillStyle = scoreFlash > 0 ? '#ffe082' : '#fff';
   ctx.strokeStyle = '#333';
   ctx.lineWidth = 4;
   ctx.font = 'bold 48px "Segoe UI", system-ui, sans-serif';
   ctx.textAlign = 'center';
-  ctx.strokeText(score, W / 2, 65);
-  ctx.fillText(score, W / 2, 65);
+  ctx.strokeText(score, 0, 0);
+  ctx.fillText(score, 0, 0);
+  ctx.restore();
 }
 
 function drawReady() {
@@ -354,7 +375,7 @@ function draw() {
   pipes.forEach(drawPipe);
   drawGround();
   drawBird();
-  drawScore();
+  if (gameState === 'playing' || gameState === 'dead') drawScore();
 
   if (gameState === 'ready') drawReady();
   if (gameState === 'dead') drawGameOver();
