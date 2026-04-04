@@ -1,18 +1,22 @@
 // Extracted game logic for testing
-const CHOICES = ['rock','fireball','water','lightning'];
+const CHOICES = ['fire','water','lightning','grass','metal','rock'];
 
 const BEATS = {
-  rock:      ['fireball'],
-  fireball:  ['lightning'],
-  water:     ['fireball','rock'],
-  lightning: ['water','rock']
+  fire:      ['lightning','grass','metal'],
+  water:     ['fire','metal','rock'],
+  lightning: ['water','grass','metal'],
+  grass:     ['water','rock'],
+  metal:     ['grass','rock'],
+  rock:      ['fire','lightning']
 };
 
 const WHY = {
-  'rock>fireball':'smothers',
-  'fireball>lightning':'overpowers',
-  'water>fireball':'extinguishes','water>rock':'erodes',
-  'lightning>water':'electrifies','lightning>rock':'shatters'
+  'fire>lightning':'absorbs','fire>grass':'burns','fire>metal':'melts',
+  'water>fire':'extinguishes','water>metal':'rusts','water>rock':'erodes',
+  'lightning>water':'electrifies','lightning>grass':'scorches','lightning>metal':'conducts through',
+  'grass>water':'absorbs','grass>rock':'overgrows',
+  'metal>grass':'cuts','metal>rock':'smashes',
+  'rock>fire':'smothers','rock>lightning':'grounds'
 };
 
 function resolve(a, b) {
