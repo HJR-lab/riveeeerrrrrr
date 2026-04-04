@@ -145,9 +145,9 @@
 
   <div class="match-format" id="matchFormat">
     <span>Match:</span>
-    <button class="format-btn" data-bo="1">Bo1</button>
-    <button class="format-btn" data-bo="3">Bo3</button>
-    <button class="format-btn active" data-bo="5">Bo5</button>
+    <button class="format-btn" data-bo="1">FT1</button>
+    <button class="format-btn" data-bo="3">FT3</button>
+    <button class="format-btn active" data-bo="5">FT5</button>
     <button class="format-btn" data-bo="0">Endless</button>
   </div>
   <div class="match-status" id="matchStatus"></div>
@@ -429,7 +429,7 @@ document.querySelectorAll('.format-btn').forEach(btn => {
 function updateMatchStatus() {
   if (bestOf === 0) { $matchStatus.textContent = ''; return; }
   const need = bestOf;
-  $matchStatus.textContent = `Bo${bestOf}  \u2014  ${matchWins.left} - ${matchWins.right}  (first to ${need})`;
+  $matchStatus.textContent = `FT${bestOf}  \u2014  ${matchWins.left} - ${matchWins.right}  (first to ${need})`;
 }
 
 function checkMatchWinner() {

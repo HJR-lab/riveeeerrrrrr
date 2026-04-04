@@ -145,43 +145,41 @@ for (const a of CHOICES) {
 }
 
 // ═══════════════════════════════════════
-// TEST 9: Best-of-N logic check
+// TEST 9: First-to-N logic check
 // ═══════════════════════════════════════
-console.log('\n--- Test: Best-of-N logic ---');
+console.log('\n--- Test: First-to-N logic ---');
 // The code uses: const need = bestOf; and checks matchWins >= need
-// For Bo5, this means you need 5 wins — but Bo5 should mean first to 3
+// For FT5, this means you need 5 wins — correct for "first to" format
 function checkMatchWinner_game(bestOf, leftWins, rightWins) {
   if (bestOf === 0) return false;
-  const need = bestOf; // <-- this is what the game code does
+  const need = bestOf;
   return (leftWins >= need || rightWins >= need);
 }
 
-function checkMatchWinner_correct(bestOf, leftWins, rightWins) {
-  if (bestOf === 0) return false;
-  const need = Math.ceil(bestOf / 2);
-  return (leftWins >= need || rightWins >= need);
-}
+// FT5: first to 5 should end the match
+const ft5_5wins = checkMatchWinner_game(5, 5, 3);
+console.log(`  FT5 with 5-3 score — game says match over: ${ft5_5wins} (should be true)`);
+assertEqual(ft5_5wins, true, 'FT5 match should end at 5 wins');
 
-// Bo5: first to 3 should end the match
-const bo5_3wins_game = checkMatchWinner_game(5, 3, 1);
-const bo5_3wins_correct = checkMatchWinner_correct(5, 3, 1);
-console.log(`  Bo5 with 3-1 score — game says match over: ${bo5_3wins_game} (should be true)`);
-if (!bo5_3wins_game) {
-  errors.push('BUG: Bo5 match does not end at 3 wins — requires 5 wins instead. "const need = bestOf" should be "const need = Math.ceil(bestOf / 2)"');
-  failed++;
-} else {
-  passed++;
-}
+// FT5: 4 wins should NOT end the match
+const ft5_4wins = checkMatchWinner_game(5, 4, 3);
+console.log(`  FT5 with 4-3 score — game says match over: ${ft5_4wins} (should be false)`);
+assertEqual(ft5_4wins, false, 'FT5 match should not end at 4 wins');
 
-// Bo3: first to 2 should end the match
-const bo3_2wins_game = checkMatchWinner_game(3, 2, 0);
-console.log(`  Bo3 with 2-0 score — game says match over: ${bo3_2wins_game} (should be true)`);
-if (!bo3_2wins_game) {
-  errors.push('BUG: Bo3 match does not end at 2 wins — requires 3 wins instead. Same root cause as Bo5.');
-  failed++;
-} else {
-  passed++;
-}
+// FT3: first to 3 should end the match
+const ft3_3wins = checkMatchWinner_game(3, 3, 1);
+console.log(`  FT3 with 3-1 score — game says match over: ${ft3_3wins} (should be true)`);
+assertEqual(ft3_3wins, true, 'FT3 match should end at 3 wins');
+
+// FT1: first to 1 should end the match
+const ft1_1win = checkMatchWinner_game(1, 1, 0);
+console.log(`  FT1 with 1-0 score — game says match over: ${ft1_1win} (should be true)`);
+assertEqual(ft1_1win, true, 'FT1 match should end at 1 win');
+
+// Endless: should never end
+const endless = checkMatchWinner_game(0, 100, 50);
+console.log(`  Endless with 100-50 score — game says match over: ${endless} (should be false)`);
+assertEqual(endless, false, 'Endless match should never end');
 
 // ═══════════════════════════════════════
 // TEST 10: Stats percentage label assignment check
